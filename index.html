@@ -81,6 +81,7 @@
     <button onclick="setView('front')">Frontal</button>
     <button onclick="setView('side')">Lateral</button>
     <button onclick="setView('top')">Superior</button>
+    <button onclick="setView('iso')">3D</button>
 </div>
 
 <!-- Guía de navegación -->
@@ -178,40 +179,66 @@
         const center = box.getCenter(new THREE.Vector3());
 
         controls.target.copy(center);
-        camera.position.set(center.x + size * 0.6, center.y + size * 0.6, center.z + size * 1.5);
+        camera.position.set(center.x + size * 1, center.y + size * 1, center.z + size * -1);
         camera.lookAt(center);
     }
 
     function setView(view) {
-        if (!model) return;
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3()).length() * 0.7;
+    if (!model) return;
 
-        let targetPosition;
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3()).length() * 0.7;
 
-        if (view === "front") {
-            targetPosition = new THREE.Vector3(center.x, center.y, center.z + size);
-        } else if (view === "side") {
-            targetPosition = new THREE.Vector3(center.x + size, center.y, center.z);
-        } else if (view === "top") {
-            targetPosition = new THREE.Vector3(center.x, center.y + size, center.z);
+    let targetPosition = new THREE.Vector3();
+    let targetQuaternion = new THREE.Quaternion();
+
+    if (view === "iso") {
+        targetPosition.set(center.x + size * 1, center.y + size * 1, center.z + size * -1);
+        camera.lookAt(center);
+    } else if (view === "front") {
+        targetPosition.set(center.x, center.y, center.z + size);
+        camera.lookAt(center);
+    } else if (view === "side") {
+        targetPosition.set(center.x + size, center.y, center.z);
+        camera.lookAt(center);
+    } else if (view === "top") {
+        if (isMobile) {
+            targetPosition.set(center.x, center.y + size, center.z);
+        } else {
+            targetPosition.set(center.x + size * 0.01, center.y + size * 2, center.z + size * 0);
         }
-
-        animateCamera(camera.position, targetPosition, 0.8);
-        controls.target.copy(center);
+        
+        // 🔄 Vista superior sin rotación en Y (sólo mira hacia abajo)
+        let targetRotation = new THREE.Euler(-Math.PI / 2, 0, 0);
+        targetQuaternion.setFromEuler(targetRotation);
     }
 
-    function animateCamera(start, end, duration) {
-        let startTime = performance.now();
-        function animate() {
-            let elapsed = (performance.now() - startTime) / 1000;
-            if (elapsed > duration) elapsed = duration;
-            camera.position.lerpVectors(start, end, elapsed / duration);
-            if (elapsed < duration) requestAnimationFrame(animate);
-        }
-        animate();
+    animateCamera(camera.position.clone(), targetPosition, camera.quaternion.clone(), targetQuaternion, 0.8);
+    controls.target.copy(center);
+}
+
+
+
+function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
+    let startTime = performance.now();
+
+    function animate() {
+        let elapsed = (performance.now() - startTime) / 1000;
+        if (elapsed > duration) elapsed = duration;
+
+        // Interpolamos posición
+        camera.position.lerpVectors(startPos, endPos, elapsed / duration);
+        
+        // 🔄 Interpolamos rotación suavemente
+        THREE.Quaternion.slerp(startQuat, endQuat, camera.quaternion, elapsed / duration);
+
+        if (elapsed < duration) requestAnimationFrame(animate);
     }
+    animate();
+}
+
+
 
     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
