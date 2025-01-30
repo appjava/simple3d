@@ -1,6 +1,6 @@
-# 🏡 SweetHome3D Viewer 🚀
+# 🏡 Simple 3D Viewer 🚀
 
-**Visualizador 3D de modelos exportados desde SweetHome3D, desarrollado con Three.js sin frameworks.**
+**Visualizador 3D de modelos exportados desde un modelador 3D, desarrollado con Three.js sin frameworks.**
 
 📌 **Características principales:**
 ✅ Interfaz moderna y profesional con fondo oscuro.
@@ -26,8 +26,8 @@
 ### 🔧 1️⃣ **Clona el repositorio**
 
 ```bash
-git clone https://github.com/tu-usuario/sweethome3d-viewer.git
-cd sweethome3d-viewer
+git clone https://github.com/appjava/simple3d.git
+cd simple3d
 ```
 
 ### 🌍 2️⃣ **Abre en el navegador**
@@ -44,7 +44,7 @@ O simplemente abre el archivo `index.html` en tu navegador.
 ## 🏗 **Estructura del Proyecto**
 
 ```
-/sweethome3d-viewer
+/simple3d
 │── models/         # Carpeta donde van los archivos .obj y .mtl
 │── index.html      # Archivo principal
 │── README.md       # Este archivo con la documentación
@@ -82,7 +82,7 @@ Si deseas cargar tu propio modelo exportado desde SweetHome3D:
 2. Coloca los archivos en la carpeta `models/`.
 3. Modifica estas líneas en `script.js`:
    ```js
-   loadModel("models/tu_modelo.mtl", "models/tu_modelo.obj");
+   loadModel("models/model.mtl", "models/model.obj");
    ```
 
 ---
