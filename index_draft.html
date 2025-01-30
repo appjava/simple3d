@@ -6,6 +6,7 @@
     <title>SweetHome3D Viewer Profesional</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/DeviceOrientationControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/OBJLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/MTLLoader.js"></script>
     <style>
@@ -21,24 +22,24 @@
         /* Contenedor de controles */
         .controls, .navigation-guide {
             position: absolute;
-            left: 12px;
-            background: rgba(0, 0, 0, 0.6);
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
             padding: 12px;
-            border-radius: 9px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
-        .controls { top: 20px; }
-        .navigation-guide { bottom: 12px; font-size: 12px; line-height: 1.5; }
+        .controls { top: 20px; display: none; } /* Oculto en móviles */
+        .navigation-guide { bottom: 20px; font-size: 14px; line-height: 1.5; }
 
         button {
             color: white;
             background: transparent;
             border: 1px solid white;
             padding: 8px 14px;
-            margin: 3px;
+            margin: 5px;
             cursor: pointer;
             transition: all 0.3s ease-in-out;
-            border-radius: 6px;
+            border-radius: 5px;
         }
         button:hover {
             background: white;
@@ -67,6 +68,17 @@
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
+
+        /* Botones táctiles en móviles */
+        .mobile-buttons {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none; /* Oculto en PC */
+            flex-direction: row;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -76,8 +88,15 @@
     <div class="spinner"></div>
 </div>
 
-<!-- Panel de control -->
+<!-- Panel de control (PC) -->
 <div class="controls">
+    <button onclick="setView('front')">Frontal</button>
+    <button onclick="setView('side')">Lateral</button>
+    <button onclick="setView('top')">Superior</button>
+</div>
+
+<!-- Botones táctiles (Móvil) -->
+<div class="mobile-buttons">
     <button onclick="setView('front')">Frontal</button>
     <button onclick="setView('side')">Lateral</button>
     <button onclick="setView('top')">Superior</button>
@@ -85,72 +104,61 @@
 
 <!-- Guía de navegación -->
 <div class="navigation-guide">
+    <h3>Controles</h3>
     <span id="desktop-guide">
         🖱 <strong>Rotar:</strong> Clic izquierdo + arrastrar <br>
         🖱 <strong>Zoom:</strong> Rueda del mouse <br>
         🖱 <strong>Pan:</strong> Clic derecho + arrastrar <br>
+        ⌨️ <strong>Vistas:</strong> 1 (Frontal), 2 (Lateral), 3 (Superior)
     </span>
-
     <span id="mobile-guide" style="display: none;">
-        📱 <strong>Rotar:</strong> Un dedo en pantalla <br>
+        📱 <strong>Rotar:</strong> Mueve tu dispositivo <br>
         📱 <strong>Zoom:</strong> Pellizca con dos dedos <br>
-        📱 <strong>Mover:</strong> Dos dedos en pantalla
+        📱 <strong>Vistas:</strong> Usa los botones en pantalla
     </span>
 </div>
 
-
 <script>
-    let scene, camera, renderer, controls, model;
+    let scene, camera, renderer, controls, model, isMobile;
 
     function detectDevice() {
         return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
     function init() {
-
         isMobile = detectDevice();
 
         scene = new THREE.Scene();
-
-        // Configurar controles según el dispositivo
-        if (isMobile) {
-            document.getElementById("mobile-guide").style.display = "block";
-            document.getElementById("desktop-guide").style.display = "none";
-        } else {
-            document.getElementById("mobile-guide").style.display = "none";
-            document.getElementById("desktop-guide").style.display = "block";
-        }
-
-        // Configuración de cámara
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(5, 5, 10);
 
-        // Renderizador
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         document.body.appendChild(renderer.domElement);
 
-        // Controles de órbita
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.1;
-        controls.minDistance = 2;
-        controls.maxDistance = 1000;
+        // Configurar controles según el dispositivo
+        if (isMobile) {
+            controls = new THREE.DeviceOrientationControls(camera);
+            document.querySelector('.mobile-buttons').style.display = "flex";
+            document.getElementById("mobile-guide").style.display = "block";
+            document.getElementById("desktop-guide").style.display = "none";
+        } else {
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.1;
+            document.querySelector('.controls').style.display = "block";
+        }
 
-        // Iluminación mejorada
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
         dirLight.position.set(10, 10, 10);
-        dirLight.castShadow = true;
         scene.add(dirLight);
 
-        // Cargar modelo
         loadModel("models/model.mtl", "models/model.obj");
 
-        // Ajustar tamaño al cambiar ventana
         window.addEventListener("resize", onWindowResize);
+        if (!isMobile) window.addEventListener("keydown", onKeyPress);
 
         animate();
     }
@@ -163,54 +171,27 @@
             objLoader.setMaterials(materials);
             objLoader.load(objPath, (object) => {
                 object.scale.set(1, 1, 1);
-                object.position.set(0, 0, 0);
                 model = object;
                 scene.add(model);
-                adjustCamera(model);
                 fadeOutLoader();
             });
         });
     }
 
-    function adjustCamera(object) {
-        const box = new THREE.Box3().setFromObject(object);
-        const size = box.getSize(new THREE.Vector3()).length();
-        const center = box.getCenter(new THREE.Vector3());
-
-        controls.target.copy(center);
-        camera.position.set(center.x + size * 0.6, center.y + size * 0.6, center.z + size * 1.5);
-        camera.lookAt(center);
-    }
-
     function setView(view) {
         if (!model) return;
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3()).length() * 0.7;
-
-        let targetPosition;
-
-        if (view === "front") {
-            targetPosition = new THREE.Vector3(center.x, center.y, center.z + size);
-        } else if (view === "side") {
-            targetPosition = new THREE.Vector3(center.x + size, center.y, center.z);
-        } else if (view === "top") {
-            targetPosition = new THREE.Vector3(center.x, center.y + size, center.z);
-        }
-
-        animateCamera(camera.position, targetPosition, 0.8);
-        controls.target.copy(center);
+        let positions = {
+            front: [0, 5, 10],
+            side: [10, 5, 0],
+            top: [0, 15, 0]
+        };
+        camera.position.set(...positions[view]);
+        camera.lookAt(scene.position);
     }
 
-    function animateCamera(start, end, duration) {
-        let startTime = performance.now();
-        function animate() {
-            let elapsed = (performance.now() - startTime) / 1000;
-            if (elapsed > duration) elapsed = duration;
-            camera.position.lerpVectors(start, end, elapsed / duration);
-            if (elapsed < duration) requestAnimationFrame(animate);
-        }
-        animate();
+    function onKeyPress(event) {
+        let keyMap = { 49: "front", 50: "side", 51: "top" };
+        if (keyMap[event.keyCode]) setView(keyMap[event.keyCode]);
     }
 
     function onWindowResize() {
@@ -220,11 +201,8 @@
     }
 
     function fadeOutLoader() {
-        const loader = document.getElementById("loader");
-        setTimeout(() => {
-            loader.style.opacity = "0";
-            setTimeout(() => loader.style.display = "none", 500);
-        }, 500);
+        document.getElementById("loader").style.opacity = "0";
+        setTimeout(() => document.getElementById("loader").style.display = "none", 500);
     }
 
     function animate() {
