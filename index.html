@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SweetHome3D Viewer Profesional</title>
+    <title>Model 3D Viewer Pro</title>
+    <!-- Icono de la aplicación -->
+    <link rel="icon" type="image/png" href="icon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/OBJLoader.js"></script>
@@ -17,6 +19,18 @@
             color: white;
         }
         canvas { display: block; }
+
+        /* Icono en la esquina superior derecha */
+        .app-icon {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 90px;
+            height: 50px;
+            background: url('logo.png') no-repeat center center;
+            background-size: contain;
+            z-index: 10;
+        }
 
         /* Contenedor de controles */
         .controls, .navigation-guide {
@@ -45,35 +59,69 @@
             color: black;
         }
 
-        /* Loader */
-        #loader {
+         /* Loader profesional */
+         #loader {
             position: fixed;
-            width: 100%;
-            height: 100%;
-            background: #121212;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s ease-out;
+            flex-direction: column;
+            z-index: 1000;
+            transition: opacity 0.5s ease-in-out;
         }
-        .spinner {
-            border: 5px solid rgba(255, 255, 255, 0.2);
-            border-left-color: white;
-            border-radius: 50%;
+
+        /* Contenedor del icono y spinner */
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Icono de la aplicación */
+        .loader-icon {
+            width: 240px;
+            height: 120px;
+            margin-bottom: 15px;
+        }
+
+        /* Spinner de carga profesional */
+        .loader-spinner {
             width: 50px;
             height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
+            0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Texto de carga */
+        .loader-text {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #ffffff;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
+<!-- Icono en pantalla -->
+<div class="app-icon"></div>
 
-<!-- Loader -->
+<!-- Loader con icono y spinner -->
 <div id="loader">
-    <div class="spinner"></div>
+    <div class="loader-container">
+        <img src="logo.png" alt="Cargando..." class="loader-icon">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Cargando modelo...</div>
+    </div>
 </div>
 
 <!-- Panel de control -->
