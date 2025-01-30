@@ -137,7 +137,7 @@
         controls.enableDamping = true;
         controls.dampingFactor = 0.1;
         controls.minDistance = 2;
-        controls.maxDistance = 1000;
+        controls.maxDistance = 1200;
 
         // Iluminación mejorada
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
@@ -198,19 +198,19 @@
         camera.lookAt(center);
         document.getElementById("guide").style.display = "block";
     } else if (view === "front") {
-        targetPosition.set(center.x, center.y, center.z + size);
+        targetPosition.set(center.x, center.y, center.z + size+500);
         camera.lookAt(center);
         document.getElementById("guide").style.display = "none";
     } else if (view === "side") {
-        targetPosition.set(center.x + size, center.y, center.z);
+        targetPosition.set(center.x + size+500, center.y, center.z);
         camera.lookAt(center);
         document.getElementById("guide").style.display = "none";
     } else if (view === "top") {
         if (isMobile) {
-            targetPosition.set(center.x, center.y + size, center.z);
+            targetPosition.set(center.x, center.y + size+500, center.z);
             document.getElementById("guide").style.display = "none";
         } else {
-            targetPosition.set(center.x + size * 0.01, center.y + size * 2, center.z + size * 0);
+            targetPosition.set(center.x + size * 0.01, center.y + size * 1, center.z + size * 0);
             document.getElementById("guide").style.display = "none";
         }
         
