@@ -1,8 +1,9 @@
 # 🏡 Simple 3D Viewer 🚀
 
-**Visualizador 3D de modelos exportados desde un modelador 3D, desarrollado con Three.js sin frameworks.**
+**Visualizador de modelos 3D exportados en formato OBJ, desarrollado con Three.js sin frameworks.**
 
 📌 **Características principales:**
+
 ✅ Interfaz moderna y profesional con fondo oscuro.
 ✅ Controles de órbita suaves con zoom y rotación.
 ✅ Iluminación realista con sombras y luces direccionales.
@@ -17,7 +18,7 @@
 📷 **Captura de pantalla:**
 ![Simple 3D Viewer](https://raw.githubusercontent.com/appjava/simple3d/refs/heads/main/demo.png)
 
-📌 **Prueba en vivo:** [🔗 Demo Online](https://appjava.github.io/simple3d/) *(Cambia esta URL cuando publiques tu proyecto en GitHub Pages o Vercel).*
+📌 **Prueba en vivo:** [🔗 Demo Online](https://appjava.github.io/simple3d/)*.*
 
 ---
 
