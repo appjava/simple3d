@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Model Profesional Viewer</title>
+    <title>SweetHome3D Viewer Profesional</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/OBJLoader.js"></script>
@@ -19,15 +19,17 @@
         canvas { display: block; }
 
         /* Contenedor de controles */
-        .controls {
+        .controls, .navigation-guide {
             position: absolute;
-            top: 20px;
             left: 20px;
             background: rgba(0, 0, 0, 0.8);
             padding: 12px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
+        .controls { top: 20px; }
+        .navigation-guide { bottom: 20px; font-size: 14px; line-height: 1.5; }
+
         button {
             color: white;
             background: transparent;
@@ -81,6 +83,15 @@
     <button onclick="setView('top')">Superior</button>
 </div>
 
+<!-- Guía de navegación -->
+<div class="navigation-guide">
+    <!--<h3>Controles</h3>-->
+    🖱 <strong>Rotar:</strong> Clic izquierdo + arrastrar <br>
+    🖱 <strong>Zoom:</strong> Rueda del mouse <br>
+    🖱 <strong>Pan:</strong> Clic derecho + arrastrar <br>
+    <!--⌨️ <strong>Vistas:</strong> 1 (Frontal), 2 (Lateral), 3 (Superior)-->
+</div>
+
 <script>
     let scene, camera, renderer, controls, model;
 
@@ -102,7 +113,7 @@
         controls.enableDamping = true;
         controls.dampingFactor = 0.1;
         controls.minDistance = 2;
-        controls.maxDistance = 800;
+        controls.maxDistance = 750;
 
         // Iluminación mejorada
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
@@ -161,7 +172,7 @@
         } else if (view === "side") {
             targetPosition = new THREE.Vector3(center.x + size, center.y, center.z);
         } else if (view === "top") {
-            targetPosition = new THREE.Vector3(center.x, center.y + size - 300, center.z);
+            targetPosition = new THREE.Vector3(center.x, center.y + size - 250, center.z);
         }
 
         animateCamera(camera.position, targetPosition, 0.8);
