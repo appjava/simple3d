@@ -130,6 +130,7 @@
     <button onclick="setView('side')">Side</button>
     <button onclick="setView('top')">Top</button>
     <button onclick="setView('iso')">3D</button>
+    <button onclick="switchModel()">Switch</button>
 </div>
 
 <!-- Guía de navegación -->
@@ -149,7 +150,7 @@
 
 
 <script>
-    let scene, camera, renderer, controls, model;
+    let scene, camera, renderer, controls, model, modelo;
 
     function detectDevice() {
         return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -196,12 +197,25 @@
         scene.add(dirLight);
 
         // Cargar modelo
-        loadModel("models/model.mtl", "models/model.obj");
+        loadModel("model1/model.mtl", "model1/model.obj");
+        modelo = "model1";
 
         // Ajustar tamaño al cambiar ventana
         window.addEventListener("resize", onWindowResize);
 
         animate();
+    }
+
+    function switchModel(){
+        if (modelo == "model2") {
+            scene.remove(model);
+            loadModel("model1/model.mtl", "model1/model.obj");
+            modelo = "model1";
+        } else if (modelo == "model1"){
+            scene.remove(model);
+            loadModel("model2/model.mtl", "model2/model.obj");
+            modelo = "model2";
+        }
     }
 
     function loadModel(mtlPath, objPath) {
@@ -271,8 +285,6 @@
     controls.target.copy(center);
 }
 
-
-
 function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
     let startTime = performance.now();
 
@@ -290,8 +302,6 @@ function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
     }
     animate();
 }
-
-
 
     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
