@@ -109,11 +109,15 @@
             color: #ffffff;
             font-weight: bold;
         }
+
+        #brand, #guide, #controls{
+            display: none;
+        }
     </style>
 </head>
 <body>
 <!-- Icono en pantalla -->
-<a href="./"><div class="app-icon"></div></a>
+<a href="./" id="brand"><div class="app-icon"></div></a>
 
 <!-- Loader con icono y spinner -->
 <div id="loader">
@@ -125,7 +129,7 @@
 </div>
 
 <!-- Panel de control -->
-<div class="controls">
+<div class="controls" id="controls">
     <button onclick="setView('front')">Front</button>
     <button onclick="setView('side')">Side</button>
     <button onclick="setView('top')">Top</button>
@@ -315,6 +319,9 @@ function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
             loader.style.opacity = "0";
             setTimeout(() => loader.style.display = "none", 500);
         }, 500);
+        document.getElementById("brand").style.display = "block";
+        document.getElementById("guide").style.display = "block";
+        document.getElementById("controls").style.display = "block";
     }
 
     function animate() {
