@@ -4,11 +4,11 @@
 
 📌 **Características principales:**
 
-✅ Interfaz moderna y profesional con fondo oscuro.
-✅ Controles de órbita suaves con zoom y rotación.
-✅ Iluminación realista con sombras y luces direccionales.
-✅ Botones para cambiar entre vistas predefinidas (Frontal, Lateral, Superior).
-✅ Animaciones suaves en los cambios de cámara.
+✅ Interfaz moderna y profesional con fondo oscuro.<br>
+✅ Controles de órbita suaves con zoom y rotación.<br>
+✅ Iluminación realista con sombras y luces direccionales.<br>
+✅ Botones para cambiar entre vistas predefinidas (Frontal, Lateral, Superior).<br>
+✅ Animaciones suaves en los cambios de cámara.<br>
 ✅ Carga elegante con efecto de fade-out.
 
 ---
@@ -58,10 +58,10 @@ O simplemente abre el archivo `index.html` en tu navegador.
 
 | Acción                                | Descripción                                    |
 | -------------------------------------- | ----------------------------------------------- |
-| 🖱**Clic izquierdo + arrastrar** | Rotar modelo                                    |
-| 🔍**Rueda del mouse**            | Zoom in/out                                     |
-| 🖱**Clic derecho + arrastrar**   | Mover modelo                                    |
-| 🎯**Botones de vista**           | Cambiar entre vista frontal, lateral y superior |
+| 🖱 **Clic izquierdo + arrastrar** | Rotar modelo                                    |
+| 🔍 **Rueda del mouse**            | Zoom in/out                                     |
+| 🖱 **Clic derecho + arrastrar**   | Mover modelo                                    |
+| 🎯 **Botones de vista**           | Cambiar entre vista frontal, lateral y superior |
 
 ---
 
@@ -79,7 +79,7 @@ Si deseas cargar tu propio modelo exportado desde un software CAD 3D:
 
 1. Guarda el modelo en formato `.obj` y `.mtl`.
 2. Coloca los archivos en la carpeta `model/`.
-3. Modifica estas líneas en `script.js`:
+3. Modifica estas líneas en `scripts.js`:
    ```js
    loadModel("models/model.mtl", "models/model.obj");
    ```
@@ -88,10 +88,10 @@ Si deseas cargar tu propio modelo exportado desde un software CAD 3D:
 
 ## 🎯 **Roadmap / Mejoras Futuras**
 
-🔹 Agregar compatibilidad con más formatos (GLTF, FBX).
-🔹 Integrar una opción de cambio de texturas en tiempo real.
-🔹 Incluir herramientas de medición dentro del modelo.
-🔹 Cargar modelos directamente em pantalla.
+🔹 Agregar compatibilidad con más formatos (GLTF, FBX).<br>
+🔹 Integrar una opción de cambio de texturas en tiempo real.<br>
+🔹 Incluir herramientas de medición dentro del modelo.<br>
+🔹 Cargar modelos directamente en pantalla.
 
 ---
 
