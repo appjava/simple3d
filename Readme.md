@@ -13,12 +13,12 @@
 
 ---
 
-## 🎬 **Demo del Proyecto**
+## 🎬 **Proyecto**
 
-📷 **Captura de pantalla:**
-![Simple 3D Viewer](https://raw.githubusercontent.com/appjava/simple3d/refs/heads/main/src/images/demo.png)
+📷 **Logo:**
+![Simple 3D Viewer](https://raw.githubusercontent.com/appjava/simple3d/refs/heads/main/src/images/logo.png)
 
-📌 **Prueba en vivo:** [🔗 Demo Online](https://appjava.github.io/simple3d/)*.*
+📌 **Prueba en vivo:** [🔗 Online](https://appjava.github.io/simple3d/)*.*
 
 ---
 
@@ -47,11 +47,9 @@ O simplemente abre el archivo `index.html` en tu navegador.
 ```
 /simple3d
 │── models/         # Carpeta donde van los archivos .obj y .mtl
+│── src/            # Imagenes, estilos y scripts 
 │── index.html      # Archivo principal
-│── README.md       # Este archivo con la documentación
-│── assets/         # Aquí puedes poner imágenes o texturas (opcional)
-│── style.css       # Estilos adicionales (si los agregas)
-└── script.js       # Código principal en JS
+└── README.md       # Este archivo con la documentación
 ```
 
 ---
@@ -77,10 +75,10 @@ O simplemente abre el archivo `index.html` en tu navegador.
 
 ## 🛠 **Personalización**
 
-Si deseas cargar tu propio modelo exportado desde SweetHome3D:
+Si deseas cargar tu propio modelo exportado desde un software CAD 3D:
 
 1. Guarda el modelo en formato `.obj` y `.mtl`.
-2. Coloca los archivos en la carpeta `models/`.
+2. Coloca los archivos en la carpeta `model/`.
 3. Modifica estas líneas en `script.js`:
    ```js
    loadModel("models/model.mtl", "models/model.obj");
@@ -93,6 +91,7 @@ Si deseas cargar tu propio modelo exportado desde SweetHome3D:
 🔹 Agregar compatibilidad con más formatos (GLTF, FBX).
 🔹 Integrar una opción de cambio de texturas en tiempo real.
 🔹 Incluir herramientas de medición dentro del modelo.
+🔹 Cargar modelos directamente em pantalla.
 
 ---
 
