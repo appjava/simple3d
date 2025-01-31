@@ -16,7 +16,7 @@
 ## 🎬 **Demo del Proyecto**
 
 📷 **Captura de pantalla:**
-![Simple 3D Viewer](https://raw.githubusercontent.com/appjava/simple3d/refs/heads/main/demo.png)
+![Simple 3D Viewer](https://raw.githubusercontent.com/appjava/simple3d/refs/heads/main/src/images/demo.png)
 
 📌 **Prueba en vivo:** [🔗 Demo Online](https://appjava.github.io/simple3d/)*.*
 
