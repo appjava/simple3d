@@ -108,21 +108,26 @@
         targetPosition.set(center.x + size * 1, center.y + size * 1, center.z + size * -1);
         camera.lookAt(center);
         document.getElementById("guide").style.display = "block";
+        document.getElementById("donate").style.display = "none";
     } else if (view === "front") {
         targetPosition.set(center.x, center.y, center.z + size+500);
         camera.lookAt(center);
         document.getElementById("guide").style.display = "none";
+        document.getElementById("donate").style.display = "block";
     } else if (view === "side") {
         targetPosition.set(center.x + size+500, center.y, center.z);
         camera.lookAt(center);
         document.getElementById("guide").style.display = "none";
+        document.getElementById("donate").style.display = "block";
     } else if (view === "top") {
         if (isMobile) {
             targetPosition.set(center.x, center.y + size+500, center.z);
             document.getElementById("guide").style.display = "none";
+            document.getElementById("donate").style.display = "block";
         } else {
             targetPosition.set(center.x + size * 0.01, center.y + size * 1, center.z + size * 0);
             document.getElementById("guide").style.display = "none";
+            document.getElementById("donate").style.display = "block";
         }
         
         // 🔄 Vista superior sin rotación en Y (sólo mira hacia abajo)
@@ -167,6 +172,7 @@ function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
         document.getElementById("brand").style.display = "block";
         document.getElementById("guide").style.display = "block";
         document.getElementById("controls").style.display = "block";
+        
     }
 
     function animate() {
