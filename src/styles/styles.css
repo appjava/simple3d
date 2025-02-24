@@ -26,8 +26,8 @@ canvas { display: block; }
 
 form {
     position: absolute;
-    bottom: 12px;
-    left: 0px;
+    bottom: 3px;
+    left: 12px;
     width: 90px;
     height: 45px;
     size: contain;
