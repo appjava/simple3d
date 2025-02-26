@@ -38,7 +38,11 @@ Si tienes **Live Server** en VS Code:
 1. Abre el proyecto en **Visual Studio Code**.
 2. Haz clic derecho en `index.html` → **"Open with Live Server"**.
 
-O simplemente abre el archivo `index.html` en tu navegador.
+Usa [🔗 Python](https://www.python.org/downloads/) para crear un servidor local (Si lo tienes instalado):
+
+1. En la carpeta del proyecto abre un **Terminal o Consola**.
+2. Inicia el servidor con `python -m http.server`
+2. Abre la ruta del enlace en tu navegador `http://0.0.0.0:8000` (por defecto).
 
 ---
 
