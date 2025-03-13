@@ -1,14 +1,22 @@
 {
-    "name":"simple3d",
-    "short_name":"simple3d",
+    "name":"M3D Viewer",
+    "short_name":"M3D",
     "start_url": "index.html",
     "orientation": "portrait-primary",
     "icons":
         [
-            {"src":"src/images/icons/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},
-            {"src":"src/images/icons/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}
+            {
+                "src": "/web-app-manifest-192x192.png",
+                "sizes": "192x192",
+                "type": "image/png"
+            },
+            {
+                "src": "/web-app-manifest-512x512.png",
+                "sizes": "512x512",
+                "type": "image/png"
+              }
         ],
-    "theme_color":"white",
-    "background_color":"white",
+    "theme_color":"#ffffff",
+    "background_color":"#484848",
     "display":"standalone"
 }
