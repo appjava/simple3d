@@ -1,6 +1,6 @@
 const staticPage = "simple3d"
 const assets = [
-  "index.html"
+  "/"
 ]
 
 self.addEventListener("install", installEvent => {
