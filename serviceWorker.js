@@ -1,5 +1,6 @@
 const staticPage = "M3D Viewer"
 const assets = [
+  "/",
   "index.html",
   "src/js/scripts.js",
   "src/styles/styles.css",
