@@ -1,7 +1,7 @@
 {
     "name":"M3D Viewer",
     "short_name":"M3D",
-    "start_url": "index.html",
+    "start_url": "/",
     "orientation": "portrait-primary",
     "icons":
         [
