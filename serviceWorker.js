@@ -1,10 +1,7 @@
 const staticPage = "M3D Viewer"
 const assets = [
   "/",
-  "index.html",
-  "src/js/scripts.js",
-  "src/styles/styles.css",
-  "model/model.obj"
+  "index.html"
 ]
 
 self.addEventListener("install", installEvent => {
