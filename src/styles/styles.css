@@ -26,10 +26,8 @@ canvas { display: block; }
 
 form {
     position: absolute;
-    bottom: 3px;
+    bottom: 12px;
     left: 12px;
-    width: 90px;
-    height: 45px;
     size: contain;
     z-index: 10;
     text-align: center;
@@ -37,6 +35,9 @@ form {
 form h6{
     margin-bottom: 3px;
     margin-right: 3px;
+}
+form img{
+    width: 150px;
 }
 /* Contenedor de controles */
 .controls, .navigation-guide {
@@ -118,4 +119,8 @@ button:hover {
 
 #brand, #guide, #controls, #donate{
     display: none;
+}
+a{
+    color: white;
+    text-decoration: none;
 }
