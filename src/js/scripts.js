@@ -1,3 +1,4 @@
+/*
 //------------------- PWA -----------------------------//
 if ("serviceWorker" in navigator) {
 	  window.addEventListener("load", function() {
@@ -8,7 +9,7 @@ if ("serviceWorker" in navigator) {
 	  })
 	}
 //----------------------------------------------------//
-
+*/
     let scene, camera, renderer, controls, model, modelo, isMobile;
 
     function detectDevice() {
@@ -192,3 +193,137 @@ function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
     }
 
     init();
+    //fadeOutLoader();
+
+
+// Función para manejar el archivo ZIP seleccionado  
+function handleZipFile(file) {  
+    if (!file) return;  
+      
+    // Mostrar el loader  
+    document.getElementById("loader").style.opacity = "1";  
+    document.getElementById("loader").style.display = "flex";  
+      
+    // Crear una instancia de JSZip  
+    const zip = new JSZip();  
+      
+    // Leer el archivo ZIP  
+    zip.loadAsync(file)  
+        .then(function(contents) {  
+            // Buscar archivos OBJ, MTL y texturas  
+            let objFile = null;  
+            let mtlFile = null;  
+            let textureFiles = {};  
+              
+            // Recorrer todos los archivos en el ZIP  
+            Object.keys(contents.files).forEach(function(filename) {  
+                // Ignorar directorios  
+                if (contents.files[filename].dir) return;  
+                  
+                const lowerFileName = filename.toLowerCase();  
+                const fileExt = lowerFileName.split('.').pop();  
+                  
+                // Buscar archivos por extensión  
+                if (fileExt === 'obj') {  
+                    objFile = contents.files[filename];  
+                } else if (fileExt === 'mtl') {  
+                    mtlFile = contents.files[filename];  
+                } else if (['jpg', 'jpeg', 'png'].includes(fileExt)) {  
+                    // Guardar referencia a archivos de textura  
+                    const baseName = filename.split('/').pop();  
+                    textureFiles[baseName] = contents.files[filename];  
+                }  
+            });  
+              
+            // Verificar si se encontró el archivo OBJ  
+            if (!objFile) {  
+                alert("No se encontró ningún archivo OBJ en el ZIP.");  
+                fadeOutLoader();  
+                return;  
+            }  
+              
+            // Extraer los archivos  
+            const promises = [  
+                objFile.async("string"),  
+                mtlFile ? mtlFile.async("string") : Promise.resolve(null)  
+            ];  
+              
+            // Extraer todas las texturas  
+            const texturePromises = [];  
+            const textureDataUrls = {};  
+              
+            Object.entries(textureFiles).forEach(([name, file]) => {  
+                const promise = file.async("base64").then(data => {  
+                    const ext = name.split('.').pop().toLowerCase();  
+                    const mimeType = ext === 'png' ? 'image/png' : 'image/jpeg';  
+                    textureDataUrls[name] = `data:${mimeType};base64,${data}`;  
+                });  
+                texturePromises.push(promise);  
+            });  
+              
+            // Esperar a que se extraigan todos los archivos  
+            return Promise.all([  
+                Promise.all(promises),  
+                Promise.all(texturePromises)  
+            ]).then(function([[objContent, mtlContent]]) {  
+                // Si hay un archivo MTL, modificarlo para usar las texturas extraídas  
+                if (mtlContent && Object.keys(textureDataUrls).length > 0) {  
+                    // Reemplazar referencias a texturas en el MTL  
+                    Object.entries(textureDataUrls).forEach(([name, dataUrl]) => {  
+                        const regex = new RegExp(`map_Kd\\s+.*${name.replace(/\./g, '\\.')}`, 'gi');  
+                        mtlContent = mtlContent.replace(regex, `map_Kd ${dataUrl}`);  
+                    });  
+                }  
+                  
+                // Cargar el modelo  
+                loadModelFromStrings(mtlContent, objContent);  
+            });  
+        })  
+        .catch(function(error) {  
+            console.error("Error al procesar el archivo ZIP:", error);  
+            alert("Error al procesar el archivo ZIP: " + error.message);  
+            fadeOutLoader();  
+        });  
+}
+  
+// Función para cargar el modelo desde strings  
+function loadModelFromStrings(mtlString, objString) {  
+    // Si hay un modelo previo, eliminarlo  
+    if (model) {  
+        scene.remove(model);  
+    }  
+      
+    // Crear un objeto de materiales a partir del string MTL  
+    const mtlLoader = new THREE.MTLLoader();  
+      
+    if (mtlString) {  
+        // Parsear el string MTL directamente  
+        const materials = mtlLoader.parse(mtlString);  
+        materials.preload();  
+          
+        // Crear un objeto a partir del string OBJ  
+        const objLoader = new THREE.OBJLoader();  
+        objLoader.setMaterials(materials);  
+          
+        // Parsear el string OBJ directamente  
+        const object = objLoader.parse(objString);  
+        object.scale.set(1, 1, 1);  
+        object.position.set(0, 0, 0);  
+        model = object;  
+        scene.add(model);  
+        adjustCamera(model);  
+        fadeOutLoader();
+        console.log("Parsear el string MTL directamente");
+    } else {  
+        // Cargar solo el objeto sin materiales  
+        const objLoader = new THREE.OBJLoader();  
+        const object = objLoader.parse(objString);  
+        object.scale.set(1, 1, 1);  
+        object.position.set(0, 0, 0);  
+        model = object;  
+        scene.add(model);  
+        adjustCamera(model);  
+        fadeOutLoader();
+        console.log("Cargar solo el objeto sin materiales ");
+    }  
+}

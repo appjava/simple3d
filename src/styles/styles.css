@@ -127,3 +127,25 @@ a{
     color: white;
     text-decoration: none;
 }
+
+.upload-button {  
+    display: flex;  
+    align-items: center;  
+    justify-content: center;  
+    background: rgba(255, 255, 255, 0.1);  
+    border: 1px solid white;  
+    color: white;  
+    padding: 8px 14px;  
+    cursor: pointer;  
+    transition: all 0.3s ease-in-out;  
+    border-radius: 6px;  
+}  
+  
+.upload-button:hover {  
+    background: white;  
+    color: black;  
+}  
+  
+.upload-icon {  
+    margin-right: 5px;  
+}
