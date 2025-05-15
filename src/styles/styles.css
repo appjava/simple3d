@@ -40,7 +40,7 @@ form h6{
     margin-right: 3px;
 }
 form img{
-    width: 120px;
+    width: 90px;
 }
 /* Contenedor de controles */
 .controls, .navigation-guide {
@@ -165,4 +165,11 @@ a{
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     width: auto;
+}
+
+#changeColorObj{
+    height: 30px;
+    border-radius: 15px;
+    display: none;
+
 }

@@ -16,9 +16,14 @@ if ("serviceWorker" in navigator) {
     let currentMtlString = null;
     let currentObjString = null;
     let urlDefault = "https://appjava.github.io/simple3d/model/model.zip" ;
+    let color1 = "gray";
+    let color2 = "teal";
+    let textureColor = color1;
 
     // Variables globales
     let scene, camera, renderer, controls, model, modelo, isMobile;
+
+    document.getElementById("changeColorObj").style.backgroundColor = color2;
 
     function detectDevice() {
         return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -323,7 +328,7 @@ function loadModelFromStrings(mtlString, objString) {
         object.traverse(function(child) {
             if (child instanceof THREE.Mesh) {
                 child.material = new THREE.MeshPhongMaterial({
-                    color: 0x808080,
+                    color: textureColor,
                     side: THREE.DoubleSide
                 });
             }
@@ -341,7 +346,7 @@ function loadModelFromStrings(mtlString, objString) {
 
 function toggleMaterials() {
     mtlEnabled = !mtlEnabled;
-    document.getElementById('mtlToggle').textContent = `MTL: ${mtlEnabled ? 'ON' : 'OFF'}`;
+    document.getElementById('mtlToggle').textContent = `Texture: ${mtlEnabled ? 'ON' : 'OFF'}`;
     
     let mtlString = currentMtlString;
     let objString = currentObjString;
@@ -373,6 +378,7 @@ function toggleMaterials() {
         //adjustCamera(model);  
         fadeOutLoader();
         console.log("Texturas ON");
+        document.getElementById("changeColorObj").style.display = "none";
     } else {  
         // Cargar solo el objeto sin materiales  
         const objLoader = new THREE.OBJLoader();  
@@ -382,7 +388,7 @@ function toggleMaterials() {
         object.traverse(function(child) {
             if (child instanceof THREE.Mesh) {
                 child.material = new THREE.MeshPhongMaterial({
-                    color: 0x603090,
+                    color: textureColor,
                     side: THREE.DoubleSide
                 });
             }
@@ -395,6 +401,8 @@ function toggleMaterials() {
         //adjustCamera(model);  
         fadeOutLoader();
         console.log("Texturas OFF");
+
+        document.getElementById("changeColorObj").style.display = "inline";
     }  
 
 }
@@ -452,4 +460,39 @@ function cancelUpload(type) {
         document.getElementById('urlUploadContainer').style.display = 'none';
         document.getElementById('urlInput').value = '';
     }
+}
+
+//--------
+function changeColorObj(){
+    textureColor = document.getElementById("changeColorObj").style.backgroundColor;
+    if(textureColor === color2){
+        textureColor = color2;
+        document.getElementById("changeColorObj").style.backgroundColor = color1;
+    } else {
+        textureColor = color1;
+        document.getElementById("changeColorObj").style.backgroundColor = color2;
+    }
+    
+    
+    // Cargar solo el objeto sin materiales  
+    const objLoader = new THREE.OBJLoader();  
+    const object = objLoader.parse(currentObjString);  
+    
+    // Aplicar material por defecto
+    object.traverse(function(child) {
+        if (child instanceof THREE.Mesh) {
+            child.material = new THREE.MeshPhongMaterial({
+                color: textureColor,
+                side: THREE.DoubleSide
+            });
+        }
+    });
+    
+    //object.scale.set(1, 1, 1);  
+    //object.position.set(0, 0, 0);  
+    model = object;  
+    scene.add(model);  
+    //adjustCamera(model);  
+    fadeOutLoader();
+    console.log("Cambio Color Textura");
 }
