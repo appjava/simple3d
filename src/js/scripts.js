@@ -15,7 +15,7 @@ if ("serviceWorker" in navigator) {
     let mtlEnabled = true;
     let currentMtlString = null;
     let currentObjString = null;
-    let urlDefault = "https://appjava.github.io/M3D/model/model.zip" ;
+    let urlDefault = "https://appjava.github.io/simple3d/model/model.zip" ;
 
     // Variables globales
     let scene, camera, renderer, controls, model, modelo, isMobile;
