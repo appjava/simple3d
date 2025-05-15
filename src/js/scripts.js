@@ -15,10 +15,10 @@ if ("serviceWorker" in navigator) {
     let mtlEnabled = true;
     let currentMtlString = null;
     let currentObjString = null;
-    let urlDefault = "https://appjava.github.io/simple3d/model/model.zip" ;
+    let urlDefault = "model/model.zip" ;
     let color1 = "gray";
     let color2 = "teal";
-    let textureColor = color1;
+    let textureColor = color2;
 
     // Variables globales
     let scene, camera, renderer, controls, model, modelo, isMobile;
@@ -292,6 +292,7 @@ function loadModelFromStrings(mtlString, objString) {
     currentMtlString = mtlString;
     currentObjString = objString;
     
+    
     // Si hay un modelo previo, eliminarlo  
     if (model) {  
         scene.remove(model);  
@@ -337,6 +338,7 @@ function loadModelFromStrings(mtlString, objString) {
         object.scale.set(1, 1, 1);  
         object.position.set(0, 0, 0);  
         model = object;  
+        
         scene.add(model);  
         adjustCamera(model);  
         fadeOutLoader();
@@ -378,7 +380,7 @@ function toggleMaterials() {
         //adjustCamera(model);  
         fadeOutLoader();
         console.log("Texturas ON");
-        document.getElementById("changeColorObj").style.display = "none";
+        //document.getElementById("changeColorObj").style.display = "none";
     } else {  
         // Cargar solo el objeto sin materiales  
         const objLoader = new THREE.OBJLoader();  
@@ -402,7 +404,7 @@ function toggleMaterials() {
         fadeOutLoader();
         console.log("Texturas OFF");
 
-        document.getElementById("changeColorObj").style.display = "inline";
+        //document.getElementById("changeColorObj").style.display = "inline";
     }  
 
 }
@@ -412,12 +414,15 @@ async function loadFromURL() {
     let url;
     let urlInput = document.getElementById('urlInput');
     
-    if (urlInput.innerHTML == ""){
+    if (urlInput.value === ""){
         url = urlDefault;
+        console.log("IF");
     } else {
         url = urlInput.value.trim();
+        console.log("ELSE");
     }
-    
+    console.log(url);
+
     if (!url) {
         alert('Por favor, ingresa una URL válida');
         return;
@@ -474,7 +479,8 @@ function changeColorObj(){
     }
     
     
-    // Cargar solo el objeto sin materiales  
+    // Cargar solo el objeto sin materiales 
+    scene.remove(model);
     const objLoader = new THREE.OBJLoader();  
     const object = objLoader.parse(currentObjString);  
     
