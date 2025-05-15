@@ -58,12 +58,13 @@ if ("serviceWorker" in navigator) {
 
         // Cargar modelo
         loadModel("model/model.mtl", "model/model.obj");
-        modelo = "model";
+        //modelo = "model";
 
         // Ajustar tamaño al cambiar ventana
         window.addEventListener("resize", onWindowResize);
 
         animate();
+        fadeOutLoader();
     }
 
     function switchModel(){
@@ -183,7 +184,7 @@ function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
         document.getElementById("brand").style.display = "block";
         document.getElementById("guide").style.display = "block";
         document.getElementById("controls").style.display = "block";
-        
+        document.getElementById("donate").style.display = "none";
     }
 
     function animate() {
@@ -200,40 +201,38 @@ function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
 function handleZipFile(file) {  
     if (!file) return;  
       
-    // Mostrar el loader  
     document.getElementById("loader").style.opacity = "1";  
     document.getElementById("loader").style.display = "flex";  
       
-    // Crear una instancia de JSZip  
     const zip = new JSZip();  
       
-    // Leer el archivo ZIP  
     zip.loadAsync(file)  
         .then(function(contents) {  
-            // Buscar archivos OBJ, MTL y texturas  
             let objFile = null;  
             let mtlFile = null;  
             let textureFiles = {};  
               
-            // Recorrer todos los archivos en el ZIP  
             Object.keys(contents.files).forEach(function(filename) {  
-                // Ignorar directorios  
-                if (contents.files[filename].dir) return;  
+                // Ignorar archivos de la carpeta __MACOSX
+                if (filename.startsWith('__MACOSX') || filename.includes('/._')) {
+                    return;
+                }
                   
                 const lowerFileName = filename.toLowerCase();  
                 const fileExt = lowerFileName.split('.').pop();  
                   
-                // Buscar archivos por extensión  
                 if (fileExt === 'obj') {  
                     objFile = contents.files[filename];  
                 } else if (fileExt === 'mtl') {  
                     mtlFile = contents.files[filename];  
                 } else if (['jpg', 'jpeg', 'png'].includes(fileExt)) {  
-                    // Guardar referencia a archivos de textura  
                     const baseName = filename.split('/').pop();  
                     textureFiles[baseName] = contents.files[filename];  
                 }  
             });  
+            console.log(objFile);
+            console.log(mtlFile);
+            console.log(textureFiles);
               
             // Verificar si se encontró el archivo OBJ  
             if (!objFile) {  
@@ -326,4 +325,52 @@ function loadModelFromStrings(mtlString, objString) {
         fadeOutLoader();
         console.log("Cargar solo el objeto sin materiales ");
     }  
+}
+
+
+async function loadFromURL() {
+    const urlInput = document.getElementById('urlInput');
+    const url = urlInput.value.trim();
+    
+    if (!url) {
+        alert('Por favor, ingresa una URL válida');
+        return;
+    }
+
+    document.getElementById("loader").style.opacity = "1";  
+    document.getElementById("loader").style.display = "flex";
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Error al descargar el archivo');
+        
+        const blob = await response.blob();
+        const file = new File([blob], 'model.zip', { type: 'application/zip' });
+        
+        handleZipFile(file);
+    } catch (error) {
+        console.error('Error al cargar desde URL:', error);
+        alert('Error al cargar el modelo desde la URL: ' + error.message);
+        fadeOutLoader();
+    }
+}
+
+function showLocalUpload() {
+    document.getElementById('localUploadContainer').style.display = 'block';
+    document.getElementById('urlUploadContainer').style.display = 'none';
+}
+
+function showUrlInput() {
+    document.getElementById('urlUploadContainer').style.display = 'block';
+    document.getElementById('localUploadContainer').style.display = 'none';
+}
+
+function cancelUpload(type) {
+    if (type === 'local') {
+        document.getElementById('localUploadContainer').style.display = 'none';
+        document.getElementById('zipFileInput').value = '';
+    } else {
+        document.getElementById('urlUploadContainer').style.display = 'none';
+        document.getElementById('urlInput').value = '';
+    }
 }

@@ -41,14 +41,30 @@
 </div>
 
 <!-- Panel de control -->
+ 
 <div class="controls" id="controls">
+    <div>
+        <button onclick="showLocalUpload()" class="upload-btn">Cargar Modelo Local</button>
+        <button onclick="showUrlInput()" class="upload-btn">Cargar desde URL</button>
+    </div>
     <button onclick="setView('front')">Front</button>
     <button onclick="setView('side')">Side</button>
     <button onclick="setView('top')">Top</button>
     <button onclick="setView('iso')">3D</button>
-    <!--<button onclick="switchModel()">Switch</button>-->
-    <input type="file" id="zipFileInput" accept=".zip" onchange="handleZipFile(this.files[0])">
     
+    
+    <!-- Contenedor oculto para carga local -->
+    <div id="localUploadContainer" style="display: none;">
+        <input type="file" id="zipFileInput" accept=".zip" onchange="handleZipFile(this.files[0])">
+        <button onclick="cancelUpload('local')" class="cancel-btn">Cancelar</button>
+    </div>
+    
+    <!-- Contenedor oculto para URL -->
+    <div id="urlUploadContainer" style="display: none;">
+        <input type="text" id="urlInput" placeholder="URL del archivo ZIP">
+        <button onclick="loadFromURL()" class="load-btn">Cargar</button>
+        <button onclick="cancelUpload('url')" class="cancel-btn">Cancelar</button>
+    </div>
 </div>
 
 <!-- Guía de navegación -->
