@@ -10,6 +10,14 @@ if ("serviceWorker" in navigator) {
 	}
 //----------------------------------------------------//
 */
+    // Función para cargar el modelo desde strings  
+    // Al inicio del archivo, después de las variables globales existentes
+    let mtlEnabled = true;
+    let currentMtlString = null;
+    let currentObjString = null;
+    let urlDefault = "https://appjava.github.io/M3D/model/model.zip" ;
+
+    // Variables globales
     let scene, camera, renderer, controls, model, modelo, isMobile;
 
     function detectDevice() {
@@ -57,8 +65,9 @@ if ("serviceWorker" in navigator) {
         scene.add(dirLight);
 
         // Cargar modelo
-        loadModel("model/model.mtl", "model/model.obj");
+        //loadModel("model/model.mtl", "model/model.obj");
         //modelo = "model";
+        loadFromURL();
 
         // Ajustar tamaño al cambiar ventana
         window.addEventListener("resize", onWindowResize);
@@ -67,17 +76,6 @@ if ("serviceWorker" in navigator) {
         fadeOutLoader();
     }
 
-    function switchModel(){
-        if (modelo == "model2") {
-            scene.remove(model);
-            loadModel("model1/model.mtl", "model1/model.obj");
-            modelo = "model1";
-        } else if (modelo == "model1"){
-            scene.remove(model);
-            loadModel("model2/model.mtl", "model2/model.obj");
-            modelo = "model2";
-        }
-    }
 
     function loadModel(mtlPath, objPath) {
         const mtlLoader = new THREE.MTLLoader();
@@ -94,6 +92,8 @@ if ("serviceWorker" in navigator) {
                 fadeOutLoader();
             });
         });
+        currentMtlString = mtlPath;
+        currentObjString = objPath;
     }
 
     function adjustCamera(object) {
@@ -230,9 +230,6 @@ function handleZipFile(file) {
                     textureFiles[baseName] = contents.files[filename];  
                 }  
             });  
-            console.log(objFile);
-            console.log(mtlFile);
-            console.log(textureFiles);
               
             // Verificar si se encontró el archivo OBJ  
             if (!objFile) {  
@@ -284,9 +281,12 @@ function handleZipFile(file) {
             fadeOutLoader();  
         });  
 }
-  
-// Función para cargar el modelo desde strings  
+
 function loadModelFromStrings(mtlString, objString) {  
+    // Guardar las strings para poder alternar después
+    currentMtlString = mtlString;
+    currentObjString = objString;
+    
     // Si hay un modelo previo, eliminarlo  
     if (model) {  
         scene.remove(model);  
@@ -295,9 +295,9 @@ function loadModelFromStrings(mtlString, objString) {
     // Crear un objeto de materiales a partir del string MTL  
     const mtlLoader = new THREE.MTLLoader();  
       
-    if (mtlString) {  
+    if (mtlString && mtlEnabled) {  
         // Parsear el string MTL directamente  
-        const materials = mtlLoader.parse(mtlString);  
+        let materials = mtlLoader.parse(mtlString);  
         materials.preload();  
           
         // Crear un objeto a partir del string OBJ  
@@ -306,31 +306,109 @@ function loadModelFromStrings(mtlString, objString) {
           
         // Parsear el string OBJ directamente  
         const object = objLoader.parse(objString);  
+        
         object.scale.set(1, 1, 1);  
         object.position.set(0, 0, 0);  
         model = object;  
         scene.add(model);  
         adjustCamera(model);  
         fadeOutLoader();
-        console.log("Parsear el string MTL directamente");
+        console.log("Modelo cargado con materiales");
     } else {  
         // Cargar solo el objeto sin materiales  
         const objLoader = new THREE.OBJLoader();  
         const object = objLoader.parse(objString);  
+        
+        // Aplicar material por defecto
+        object.traverse(function(child) {
+            if (child instanceof THREE.Mesh) {
+                child.material = new THREE.MeshPhongMaterial({
+                    color: 0x808080,
+                    side: THREE.DoubleSide
+                });
+            }
+        });
+        
         object.scale.set(1, 1, 1);  
         object.position.set(0, 0, 0);  
         model = object;  
         scene.add(model);  
         adjustCamera(model);  
         fadeOutLoader();
-        console.log("Cargar solo el objeto sin materiales ");
+        console.log("Modelo cargado sin materiales");
     }  
+}
+
+function toggleMaterials() {
+    mtlEnabled = !mtlEnabled;
+    document.getElementById('mtlToggle').textContent = `MTL: ${mtlEnabled ? 'ON' : 'OFF'}`;
+    
+    let mtlString = currentMtlString;
+    let objString = currentObjString;
+
+    // Si hay un modelo previo, eliminarlo  
+    if (model) {  
+        scene.remove(model);  
+    }  
+      
+    // Crear un objeto de materiales a partir del string MTL  
+    const mtlLoader = new THREE.MTLLoader();  
+      
+    if (mtlString && mtlEnabled) {  
+        // Parsear el string MTL directamente  
+        let materials = mtlLoader.parse(mtlString);  
+        materials.preload();  
+          
+        // Crear un objeto a partir del string OBJ  
+        const objLoader = new THREE.OBJLoader();  
+        objLoader.setMaterials(materials);  
+          
+        // Parsear el string OBJ directamente  
+        const object = objLoader.parse(objString);  
+        
+        //object.scale.set(1, 1, 1);  
+        //object.position.set(0, 0, 0);  
+        model = object;  
+        scene.add(model);  
+        //adjustCamera(model);  
+        fadeOutLoader();
+        console.log("Texturas ON");
+    } else {  
+        // Cargar solo el objeto sin materiales  
+        const objLoader = new THREE.OBJLoader();  
+        const object = objLoader.parse(objString);  
+        
+        // Aplicar material por defecto
+        object.traverse(function(child) {
+            if (child instanceof THREE.Mesh) {
+                child.material = new THREE.MeshPhongMaterial({
+                    color: 0x603090,
+                    side: THREE.DoubleSide
+                });
+            }
+        });
+        
+        //object.scale.set(1, 1, 1);  
+        //object.position.set(0, 0, 0);  
+        model = object;  
+        scene.add(model);  
+        //adjustCamera(model);  
+        fadeOutLoader();
+        console.log("Texturas OFF");
+    }  
+
 }
 
 
 async function loadFromURL() {
-    const urlInput = document.getElementById('urlInput');
-    const url = urlInput.value.trim();
+    let url;
+    let urlInput = document.getElementById('urlInput');
+    
+    if (urlInput.innerHTML == ""){
+        url = urlDefault;
+    } else {
+        url = urlInput.value.trim();
+    }
     
     if (!url) {
         alert('Por favor, ingresa una URL válida');
@@ -353,6 +431,7 @@ async function loadFromURL() {
         alert('Error al cargar el modelo desde la URL: ' + error.message);
         fadeOutLoader();
     }
+    urlDefault = "";
 }
 
 function showLocalUpload() {
