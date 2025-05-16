@@ -78,7 +78,7 @@ if ("serviceWorker" in navigator) {
         window.addEventListener("resize", onWindowResize);
 
         animate();
-        fadeOutLoader();
+        //fadeOutLoader();
     }
 
 
