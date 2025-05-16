@@ -57,7 +57,7 @@
     
     <!-- Contenedor oculto para carga local -->
     <div id="localUploadContainer" style="display: none;">
-        <input type="file" id="zipFileInput" accept=".zip" onchange="handleZipFile(this.files[0])">
+        <input type="file" id="FileInput" accept=".zip, .obj" onchange="handleZipFile(this.files[0])">
         <button onclick="cancelUpload('local')" class="cancel-btn">Cancelar</button>
     </div>
     

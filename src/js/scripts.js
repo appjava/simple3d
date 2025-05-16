@@ -204,11 +204,13 @@ function animateCamera(startPos, endPos, startQuat, endQuat, duration) {
 
 // Función para manejar el archivo ZIP seleccionado  
 function handleZipFile(file) {  
+    
     if (!file) return;  
       
     document.getElementById("loader").style.opacity = "1";  
     document.getElementById("loader").style.display = "flex";  
-      
+     
+    if (file.name.includes(".zip")){
     const zip = new JSZip();  
       
     zip.loadAsync(file)  
@@ -241,7 +243,14 @@ function handleZipFile(file) {
                 alert("No se encontró ningún archivo OBJ en el ZIP.");  
                 fadeOutLoader();  
                 return;  
-            }  
+            }
+            if (!mtlFile){
+                document.getElementById("mtlToggle").style.display = "none";
+                console.log("Only OBJ")
+            } else {
+                document.getElementById("mtlToggle").style.display = "inline";
+                console.log("With texture");
+            }
               
             // Extraer los archivos  
             const promises = [  
@@ -284,7 +293,24 @@ function handleZipFile(file) {
             console.error("Error al procesar el archivo ZIP:", error);  
             alert("Error al procesar el archivo ZIP: " + error.message);  
             fadeOutLoader();  
-        });  
+        });
+        console.log("Archivo ZIP");
+        } else if(file.name.includes(".obj")){
+                
+                const objLoader = new THREE.OBJLoader();
+                objLoader.load(file, (object) => {
+                    object.scale.set(1, 1, 1);
+                    object.position.set(0, 0, 0);
+                    model = object;
+                    scene.add(model);
+                    adjustCamera(model);
+                    fadeOutLoader();
+                });
+                console.log("Archivo OBJ");
+                console.log(file);
+
+        }
+    
 }
 
 function loadModelFromStrings(mtlString, objString) {  
